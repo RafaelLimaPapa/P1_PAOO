@@ -10,7 +10,7 @@ app.get('/avistamentos', (req, res) => {
   res.json(avistamentos)
 })
 
-app.put('/avistamentos', (req, res) => {
+app.put('/avistamentos', async (req, res) => {
   const { local, descricao } = req.body || {}
   if (!local || !descricao) {
     return res.status(400).json({ erro: 'local e descricao são obrigatórios' })
@@ -18,6 +18,10 @@ app.put('/avistamentos', (req, res) => {
   contador++
   const avistamento = { id: contador, local, descricao }
   avistamentos[contador] = avistamento
+  await axios.post('http://localhost:10000/eventos', {
+    tipo: 'AvistamentoCriado',
+    dados: avistamento
+  })
   res.status(201).json(avistamento)
 })
 

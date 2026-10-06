@@ -6,12 +6,21 @@ app.use(express.json())
 
 const relatosPorAvistamentoId = {}
 
-app.put('/avistamentos/:id/relatos', (req, res) => {
+app.put('/avistamentos/:id/relatos', async (req, res) => {
     const { texto } = req.body || {}
     const relato = { id: uuidv4(), texto: texto, confirmacoes: 0 }
     const relatos = relatosPorAvistamentoId[req.params.id] || []
     relatos.push(relato)
     relatosPorAvistamentoId[req.params.id] = relatos
+    await axios.post('http://localhost:10000/eventos', {
+    tipo: 'RelatoCriado',
+    dados: {
+      id: relato.id,
+      texto: relato.texto,
+      confirmacoes: relato.confirmacoes,
+      avistamentoId: req.params.id
+    }
+    })
     res.status(201).json(relatos)
 })
 app.get('/avistamentos/:id/relatos', (req, res) => {

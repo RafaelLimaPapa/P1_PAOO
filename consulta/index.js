@@ -14,8 +14,19 @@ const funcoes = {
     if (avistamento) {
       avistamento.relatos.push(relato)
     }
-  }
-}
+  },
+
+    RelatoConfirmado: (dados) => {
+        const avistamento = baseConsulta[dados.avistamentoId]
+        if (avistamento) {
+            for (let relato of avistamento.relatos){
+                if (relato.id === dados.id){
+                    relato.confirmacoes = dados.confirmacoes
+                }
+            }
+        }
+    }
+ }
 
 app.get('/avistamentos', (req, res) => {
   res.json(baseConsulta)

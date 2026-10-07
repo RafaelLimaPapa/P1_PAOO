@@ -33,5 +33,29 @@ app.post('/eventos', (req, res) => {
   res.status(200).json({ msg: 'ok' })
 })
 
+app.put('/avistamentos/:id/relatos/:idRelato/confirmacoes', async (req, res) => {
+    const relatos = relatosPorAvistamentoId[req.params.id] || []
+    let relato = null
+    for (let r of relatos){
+        if (r.id === req.params.idRelato){
+            relato = r
+        }
+    }
+    if (!relato) {
+        return res.status(404).json({erro: 'relato não encontrado'})
+    }
+    relato.confirmacoes++
+
+    await axios.post('https://localhost:10000/eventos', {
+        tipo: 'RelatoConfirmado',
+        dados: {
+            id: relato.id,
+            avistamentoId: req.params.id, 
+            confirmacoes: relato.confirmacoes
+        }
+    })
+    res.status(200).json(relato)
+})
+
 const port = 4100
 app.listen(port, () => console.log(`Relatos. Porta ${port}.`))

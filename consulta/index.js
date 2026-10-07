@@ -32,6 +32,14 @@ app.get('/avistamentos', (req, res) => {
   res.json(baseConsulta)
 })
 
+app.get('/avistamentos/:id', (req, res) => {
+  const avistamento = baseConsulta[req.params.id]
+  if (!avistamento) {
+    return res.status(404).json({ erro: 'avistamento não encontrado' })
+  }
+  res.json(avistamento)
+})
+
 app.post('/eventos', (req, res) => {
   const evento = req.body
   console.log(evento)

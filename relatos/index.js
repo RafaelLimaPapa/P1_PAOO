@@ -46,7 +46,7 @@ app.put('/avistamentos/:id/relatos/:idRelato/confirmacoes', async (req, res) => 
     }
     relato.confirmacoes++
 
-    await axios.post('https://localhost:10000/eventos', {
+    await axios.post('http://localhost:10000/eventos', {
         tipo: 'RelatoConfirmado',
         dados: {
             id: relato.id,
